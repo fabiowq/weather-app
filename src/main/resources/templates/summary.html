@@ -12,13 +12,13 @@
 <body>
 	<h1>Weather App</h1>
 	<div id="add-weather-container">
-		<label>Country: </label><input type="text" id="country" value="BR"/>
-		<label>City: </label><input type="text" id="city" value="Sao Paulo"/>
+		<label>Country: </label><input type="text" id="country" class="uppercased" value="BR"/>
+		<label>City: </label><input type="text" id="city" class="capitalized" value="Sao Paulo"/>
 		<button id="add-weather-btn">Add</button>
 	</div>
-	<ul>
+	<ul id="weather-conteiner">
 		{{#summary}}
-		<li>
+		<li id="{{locationId}}">
 			<h2>{{location.city}}, {{location.country}}</h2>
 			{{#entries}}
 				<div class="date-container">
@@ -27,13 +27,13 @@
 					{{#entries}}
 						<tr class="time">	
 							<td>
-								{{time}}
+								{{hour}}h
 							</td>
 							<td>
 								<i class="owf owf-{{code}} owf-2x" style="opacity: 0.4" ></i>
 							</td>	
 							<td>
-								{{fahrenheitTemperature}}<sup>°F</sup> / {{celsiusTemperature}}<sup>°C</sup>
+								{{celsiusTemperature}}<sup>°C</sup> / {{fahrenheitTemperature}}<sup>°F</sup>
 							</td>
 						</tr>
 					{{/entries}}

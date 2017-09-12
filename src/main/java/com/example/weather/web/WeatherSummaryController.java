@@ -8,9 +8,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.weather.WeatherAppProperties;
@@ -18,7 +19,7 @@ import com.example.weather.integration.ows.WeatherEntry;
 import com.example.weather.integration.ows.WeatherForecast;
 import com.example.weather.integration.ows.WeatherService;
 
-@Controller
+@RestController
 @RequestMapping("/")
 public class WeatherSummaryController {
 
@@ -32,24 +33,35 @@ public class WeatherSummaryController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView now() {
+	public ModelAndView home() {
 		Map<String, Object> model = new LinkedHashMap<>();
-		model.put("summary", getSummary());
+		model.put("summary", getWeatherForecastSummaryList(getLocations()));
 		return new ModelAndView("summary", model);
 	}
 	
-	private Object getSummary() {
+	@RequestMapping("weekly/{country}/{city}")
+	public WeatherForecastSummary summary(@PathVariable String country,
+			@PathVariable String city) {
+		return getWeatherForecastSummary(new Location(country, city));
+	}
+	
+	private List<WeatherForecastSummary> getWeatherForecastSummaryList(List<Location> locations) {
 		final List<WeatherForecastSummary> summary = new ArrayList<>();
-		getLocations().forEach(
+		locations.forEach(
 			location -> {
-				WeatherForecast weatherForecast = 
-						this.weatherService.getWeatherForecast(location.getCountry(), location.getCity());
-				final List<WeatherSummary> ws = createWeatherSummary(weatherForecast);
-				final WeatherForecastSummary wfs = createWeatherForecastSummary(location, ws); 
+				final WeatherForecastSummary wfs = getWeatherForecastSummary(location); 
 				summary.add(wfs);
 			}
 		);
 		return summary;
+	}
+
+	private WeatherForecastSummary getWeatherForecastSummary(Location location) {
+		WeatherForecast weatherForecast = 
+				this.weatherService.getWeatherForecast(location.getCountry(), location.getCity());
+		final List<WeatherSummary> ws = createWeatherSummary(weatherForecast);
+		final WeatherForecastSummary wfs = createWeatherForecastSummary(location, ws);
+		return wfs;
 	}
 
 	private List<Location> getLocations() {
@@ -69,19 +81,19 @@ public class WeatherSummaryController {
 		List<WeatherSummary> weatherSummaryList = new ArrayList<>(); 
 		List<WeatherEntry> weatherEntryList = weatherForecast.getEntries();
 		if (weatherEntryList != null) {
-			Map<LocalDate, List<Weather>> weatherSummaryMap = new LinkedHashMap<>();
+			Map<LocalDate, List<WeatherTime>> weatherSummaryMap = new LinkedHashMap<>();
 			for (WeatherEntry weatherEntry: weatherEntryList) {				
 				LocalDateTime localDateTime = LocalDateTime.ofInstant(
 					weatherEntry.getTimestamp(), 
 					ZoneId.systemDefault()
 				);
 				LocalDate date = localDateTime.toLocalDate();
-				List<Weather> weatherList = weatherSummaryMap.get(date);
+				List<WeatherTime> weatherList = weatherSummaryMap.get(date);
 				if (weatherList == null) {
 					weatherList = new ArrayList<>();
 					weatherSummaryMap.put(date, weatherList);
 				}
-				Weather weather = new Weather(
+				WeatherTime weather = new WeatherTime(
 					weatherEntry.getWeatherId(),
 					weatherEntry.getWeatherIcon(),
 					weatherEntry.getTemperature(),

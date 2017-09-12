@@ -108,3 +108,11 @@ input {
 	width: 50px;
 	margin-left: 20px;
 }
+
+input.uppercased {
+    text-transform: uppercase;
+}
+
+input.capitalized {
+    text-transform: capitalize;
+}

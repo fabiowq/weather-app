@@ -8,9 +8,9 @@ import java.util.Locale;
 class WeatherSummary {
 
 	private final LocalDate date;
-	private final List<Weather> entries;
+	private final List<WeatherTime> entries;
 
-	public WeatherSummary(LocalDate date, List<Weather> entries) {
+	public WeatherSummary(LocalDate date, List<WeatherTime> entries) {
 		super();
 		this.date = date;
 		this.entries = entries;
@@ -24,7 +24,7 @@ class WeatherSummary {
 		return date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.getDefault());
 	}
 
-	public List<Weather> getEntries() {
+	public List<WeatherTime> getEntries() {
 		return entries;
 	}
 	
