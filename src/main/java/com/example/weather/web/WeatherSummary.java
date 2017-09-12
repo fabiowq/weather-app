@@ -1,51 +1,31 @@
 package com.example.weather.web;
 
-import com.example.weather.integration.ows.Weather;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.List;
+import java.util.Locale;
 
 class WeatherSummary {
 
-	private final String country;
+	private final LocalDate date;
+	private final List<Weather> entries;
 
-	private final String city;
-
-	private final Integer code;
-
-	private final String icon;
-
-	private final double temperature;
-
-	WeatherSummary(String country, String city, Weather weather) {
-		this.country = country;
-		this.city = city;
-		this.code = weather.getWeatherId();
-		this.icon = weather.getWeatherIcon();
-		this.temperature = weather.getTemperature();
+	public WeatherSummary(LocalDate date, List<Weather> entries) {
+		super();
+		this.date = date;
+		this.entries = entries;
 	}
 
-	public String getCountry() {
-		return this.country;
+	public LocalDate getDate() {
+		return date;
+	}
+	
+	public String getDayOfWeek() {
+		return date.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.getDefault());
 	}
 
-	public String getCity() {
-		return this.city;
+	public List<Weather> getEntries() {
+		return entries;
 	}
-
-	public Integer getCode() {
-		return this.code;
-	}
-
-	public String getIcon() {
-		return this.icon;
-	}
-
-	public String getFahrenheitTemperature() {
-		double fahrenheitTemp = (this.temperature * 1.8) - 459.67;
-		return String.format("%4.2f", fahrenheitTemp);
-	}
-
-	public String getCelsiusTemperature() {
-		double celsiusTemp = this.temperature - 273.15;
-		return String.format("%4.2f", celsiusTemp);
-	}
-
+	
 }

@@ -4,19 +4,42 @@
 <meta charset="UTF-8">
 <link href="css/owfont-regular.min.css" rel="stylesheet" type="text/css">
 <link href="css/style.css" rel="stylesheet" type="text/css">
-<title>Weather Summary</title>
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
+
+<title>Weather App</title>
 </head>
 <body>
-    <div id="twitter"><a href="https://twitter.com/spring1platform">@spring1platform</a></div>
-	<h1>Weather Summary</h1>
+	<h1>Weather App</h1>
+	<div id="add-weather-container">
+		<label>Country: </label><input type="text" id="country" value="BR"/>
+		<label>City: </label><input type="text" id="city" value="Sao Paulo"/>
+		<button id="add-weather-btn">Add</button>
+	</div>
 	<ul>
 		{{#summary}}
 		<li>
-			<h2>{{city}}, {{country}}</h2>
-			<div>
-				<i class="owf owf-{{code}} owf-4x" style="opacity: 0.4" ></i>
-				<div class="temp">{{fahrenheitTemperature}}<sup>°F</sup> / {{celsiusTemperature}}<sup>°C</sup></div>
-			</div>
+			<h2>{{location.city}}, {{location.country}}</h2>
+			{{#entries}}
+				<div class="date-container">
+					<div class="date">{{dayOfWeek}}</div>
+					<table>
+					{{#entries}}
+						<tr class="time">	
+							<td>
+								{{time}}
+							</td>
+							<td>
+								<i class="owf owf-{{code}} owf-2x" style="opacity: 0.4" ></i>
+							</td>	
+							<td>
+								{{fahrenheitTemperature}}<sup>°F</sup> / {{celsiusTemperature}}<sup>°C</sup>
+							</td>
+						</tr>
+					{{/entries}}
+					</table>
+				</div>
+			{{/entries}}
 			<div style="clear: both;"></div>
 		</li>
 		{{/summary}}
